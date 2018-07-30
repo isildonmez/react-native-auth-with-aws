@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { TextInput, View, Stylesheet, Button } from 'react-native';
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from './aws-exports';
 
 Amplify.configure(awsconfig);
 
 class App extends Component {
+	state = {
+		authCode: ''
+	}
+
+	onChangeText(value) {
+		this.setState({
+			authCode: value
+		});
+	}
+
 	signUp() {
 		Auth.signUp({
 			username: 'meuser',
@@ -33,9 +43,29 @@ class App extends Component {
 
 	render() {
 		return (
-			<Text>Hello World!</Text>
+			<View style={styles.container}>
+				<Button>
+					title="Sign Up"
+					onPress={this.signUp.bind(this)}
+				</Button>
+				<TextInput style={styles.input}>
+					onChangeText={value => this.onChangeText(value)}
+				</TextInput>
+			</View>
 		);
 	}
 }
+
+const styles = Stylesheet.create({
+	input: {
+		height: 50,
+		backgroundColor: 'ededed',
+	},
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		backgroundColor: '#f5fcff'
+	}
+});
 
 export default App;
