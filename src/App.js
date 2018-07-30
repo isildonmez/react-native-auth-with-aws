@@ -34,7 +34,7 @@ class App extends Component {
 	}
 
 	verify() {
-		Auth.confirmSignUp('meuser', authCode)
+		Auth.confirmSignUp('meuser', this.state.authCode)
 		.then(res => {
 			console.log('confirmed!', res);
 		})
@@ -53,6 +53,10 @@ class App extends Component {
 				<TextInput
 					style={styles.input}
 					onChangeText={value => this.onChangeText(value)}
+				/>
+				<Button
+					title='Verify'
+					onPress={this.verify.bind(this)}
 				/>
 			</View>
 		);
