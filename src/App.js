@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TextInput, View, Stylesheet, Button } from 'react-native';
+import { TextInput, View, StyleSheet, Button } from 'react-native';
 import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from './aws-exports';
 
@@ -20,8 +20,10 @@ class App extends Component {
 		Auth.signUp({
 			username: 'meuser',
 			password: 'Mypassword1',
-			email: 'user@mail.com',
-			phone: '+447918236790'
+			attributes: {
+				email: 'user@mail.com',
+				phone: '+447918236795'
+			}
 		})
 		.then(res => {
 			console.log('signed up!', res);
@@ -44,22 +46,23 @@ class App extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Button>
-					title="Sign Up"
+				<Button
+					title='Sign Up'
 					onPress={this.signUp.bind(this)}
-				</Button>
-				<TextInput style={styles.input}>
+				/>
+				<TextInput
+					style={styles.input}
 					onChangeText={value => this.onChangeText(value)}
-				</TextInput>
+				/>
 			</View>
 		);
 	}
 }
 
-const styles = Stylesheet.create({
+const styles = StyleSheet.create({
 	input: {
 		height: 50,
-		backgroundColor: 'ededed',
+		backgroundColor: '#ededed',
 	},
 	container: {
 		flex: 1,
