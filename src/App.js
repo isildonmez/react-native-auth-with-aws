@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { StatusBar } from 'react-native';
 import { connect } from 'react-redux';
 import { Auth } from 'aws-amplify';
-import Tabs from '../auth/Tabs';
-import Nav from '../nav/Nav';
+import Tabs from './auth/Tabs';
+import Nav from './nav/Nav';
 
 class App extends Component {
 	state = {
