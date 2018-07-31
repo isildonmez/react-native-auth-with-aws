@@ -43,6 +43,24 @@ class App extends Component {
 		});
 	}
 
+	signIn() {
+		Auth.signIn(username, password)
+		.then(user => {})
+		.catch(err => {
+			console.log('error: ', err);
+		});
+	}
+
+	confirmSignIn() {
+		Auth.confirmSignIn(user, authCode)
+		.then(user => {
+			console.log('user: ', user);
+		})
+		.catch(err => {
+			console.log('error: ', err);
+		});
+	}
+
 	render() {
 		return (
 			<View style={styles.container}>
