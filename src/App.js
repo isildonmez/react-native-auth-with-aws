@@ -7,13 +7,12 @@ Amplify.configure(awsconfig);
 
 class App extends Component {
 	state = {
-		authCode: ''
+		authCode: '',
+		user: {}
 	}
 
-	onChangeText(value) {
-		this.setState({
-			authCode: value
-		});
+	onChangeText(authCode) {
+		this.setState({ authCode });
 	}
 
 	signUp() {
@@ -26,28 +25,30 @@ class App extends Component {
 			}
 		})
 		.then(res => {
-			console.log('signed up!', res);
+			console.log('successful signup: ', res);
 		})
 		.catch(err => {
-			console.log('err:', err);
+			console.log('error signing up: ', err);
 		});
 	}
 
-	verify() {
-		Auth.confirmSignUp('meuser', this.state.authCode)
+	confirmUser() {
+		const { authCode } = this.state;
+
+		Auth.confirmSignUp('meuser', authCode)
 		.then(res => {
-			console.log('confirmed!', res);
+			console.log('successful confirmation: ', res);
 		})
 		.catch(err => {
-			console.log('err confirming: ', err);
+			console.log('error confirming user: ', err);
 		});
 	}
 
 	signIn() {
 		Auth.signIn(username, password)
-		.then(user => {})
+		.then(user => this.setState({ user }))
 		.catch(err => {
-			console.log('error: ', err);
+			console.log('error signing in: ', err);
 		});
 	}
 
@@ -57,7 +58,7 @@ class App extends Component {
 			console.log('user: ', user);
 		})
 		.catch(err => {
-			console.log('error: ', err);
+			console.log('error confirming sign in: ', err);
 		});
 	}
 
@@ -74,7 +75,7 @@ class App extends Component {
 				/>
 				<Button
 					title='Verify'
-					onPress={this.verify.bind(this)}
+					onPress={this.confirmUser.bind(this)}
 				/>
 			</View>
 		);
@@ -85,6 +86,7 @@ const styles = StyleSheet.create({
 	input: {
 		height: 50,
 		backgroundColor: '#ededed',
+		marginVertical: 10
 	},
 	container: {
 		flex: 1,
