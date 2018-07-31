@@ -1,0 +1,3 @@
+This repo wire up full user sign up and sign in using a real service, Amazon Cognito with AWS Amplify, allowing users to sign in with username + Password with two factor phone authentication; and has a real world navigation flow with the help of Redux + React-Navigation.
+
+I've coded along [Part 1](https://medium.com/react-native-training/react-native-authentication-in-depth-8d8c2e4ad81b) and [Part2](https://medium.com/react-native-training/react-native-authentication-in-depth-part-2-real-world-auth-flow-a8a7c3aea096) of Nader Dabit's article. Please visit [github repo](https://github.com/react-native-training/react-native-auth-starter) for the whole project.
