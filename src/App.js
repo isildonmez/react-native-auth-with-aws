@@ -1,98 +1,137 @@
 import React, { Component } from 'react';
-import { TextInput, View, StyleSheet, Button } from 'react-native';
-import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from './aws-exports';
+import { StatusBar } from 'react-native';
+import { connect } from 'react-redux';
+import { Auth } from 'aws-amplify';
+// import awsconfig from './aws-exports';
+import Tabs from '../auth/Tabs';
+import Nav from '../nav/Nav';
 
-Amplify.configure(awsconfig);
+// Amplify.configure(awsconfig);
 
 class App extends Component {
 	state = {
-		authCode: '',
-		user: {}
+		user: {},
+		isLoading: true
 	}
 
-	onChangeText(authCode) {
-		this.setState({ authCode });
+	async componentDidMount() {
+		StatusBar.setHidden(true);
+		try {
+			const user = await Auth.currentAuthenticatedUser();
+			this.setState({ user, isLoading: false });
+		} catch (err) {
+			this.setState({ isLoading: false });
+		}
 	}
 
-	signUp() {
-		Auth.signUp({
-			username: 'meuser',
-			password: 'Mypassword1',
-			attributes: {
-				email: 'user@mail.com',
-				phone: '+447918236795'
-			}
-		})
-		.then(res => {
-			console.log('successful signup: ', res);
-		})
-		.catch(err => {
-			console.log('error signing up: ', err);
-		});
+	async componentWillReceiveProps(nextProps) {
+		try {
+			const user = await Auth.currentAuthenticatedUser();
+			this.setState({ user });
+		} catch (err) {
+			this.setState({ user: {} });
+		}
 	}
 
-	confirmUser() {
-		const { authCode } = this.state;
+	// onChangeText(authCode) {
+	// 	this.setState({ authCode });
+	// }
 
-		Auth.confirmSignUp('meuser', authCode)
-		.then(res => {
-			console.log('successful confirmation: ', res);
-		})
-		.catch(err => {
-			console.log('error confirming user: ', err);
-		});
-	}
+	// signUp() {
+	// 	Auth.signUp({
+	// 		username: 'meuser',
+	// 		password: 'Mypassword1',
+	// 		attributes: {
+	// 			email: 'user@mail.com',
+	// 			phone: '+447918236795'
+	// 		}
+	// 	})
+	// 	.then(res => {
+	// 		console.log('successful signup: ', res);
+	// 	})
+	// 	.catch(err => {
+	// 		console.log('error signing up: ', err);
+	// 	});
+	// }
 
-	signIn() {
-		Auth.signIn(username, password)
-		.then(user => this.setState({ user }))
-		.catch(err => {
-			console.log('error signing in: ', err);
-		});
-	}
+	// confirmUser() {
+	// 	const { authCode } = this.state;
 
-	confirmSignIn() {
-		Auth.confirmSignIn(user, authCode)
-		.then(user => {
-			console.log('user: ', user);
-		})
-		.catch(err => {
-			console.log('error confirming sign in: ', err);
-		});
-	}
+	// 	Auth.confirmSignUp('meuser', authCode)
+	// 	.then(res => {
+	// 		console.log('successful confirmation: ', res);
+	// 	})
+	// 	.catch(err => {
+	// 		console.log('error confirming user: ', err);
+	// 	});
+	// }
+
+	// signIn() {
+	// 	Auth.signIn(username, password)
+	// 	.then(user => this.setState({ user }))
+	// 	.catch(err => {
+	// 		console.log('error signing in: ', err);
+	// 	});
+	// }
+
+	// confirmSignIn() {
+	// 	Auth.confirmSignIn(user, authCode)
+	// 	.then(user => {
+	// 		console.log('user: ', user);
+	// 	})
+	// 	.catch(err => {
+	// 		console.log('error confirming sign in: ', err);
+	// 	});
+	// }
 
 	render() {
+		if (this.state.isLoading) return null;
+		let loggedIn = false;
+		if (this.state.user.username) {
+			loggedIn = true;
+		}
+		if (loggedIn) {
+			return (
+				<Nav />
+			);
+		}
 		return (
-			<View style={styles.container}>
-				<Button
-					title='Sign Up'
-					onPress={this.signUp.bind(this)}
-				/>
-				<TextInput
-					style={styles.input}
-					onChangeText={value => this.onChangeText(value)}
-				/>
-				<Button
-					title='Verify'
-					onPress={this.confirmUser.bind(this)}
-				/>
-			</View>
+			<Tabs />
 		);
+		// return (
+		// 	<View style={styles.container}>
+		// 		<Button
+		// 			title='Sign Up'
+		// 			onPress={this.signUp.bind(this)}
+		// 		/>
+		// 		<TextInput
+		// 			style={styles.input}
+		// 			onChangeText={value => this.onChangeText(value)}
+		// 		/>
+		// 		<Button
+		// 			title='Verify'
+		// 			onPress={this.confirmUser.bind(this)}
+		// 		/>
+		// 	</View>
+		// );
 	}
 }
 
-const styles = StyleSheet.create({
-	input: {
-		height: 50,
-		backgroundColor: '#ededed',
-		marginVertical: 10
-	},
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		backgroundColor: '#f5fcff'
-	}
+// const styles = StyleSheet.create({
+// 	input: {
+// 		height: 50,
+// 		backgroundColor: '#ededed',
+// 		marginVertical: 10
+// 	},
+// 	container: {
+// 		flex: 1,
+// 		justifyContent: 'center',
+// 		backgroundColor: '#f5fcff'
+// 	}
+// });
+
+const mapStateToProps = state => ({
+	auth: state.auth
 });
 
-export default App;
+export default connect(mapStateToProps)(App);
